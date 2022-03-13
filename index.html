@@ -1,0 +1,101 @@
+<!DOCTYPE html>
+<html lang="ja">
+<div id="header">
+  <head>
+    <meta charset="utf-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+　　<!-- vue.js　-->
+    <script src="https://cdn.jsdelivr.net/npm/vue"></script>
+    <link rel="manifest" href="manifest.json">
+    <title>NAGASU</title>
+  </head>
+  <body>
+    <div id="app">
+        <head>
+<meta charset="UTF-8">
+</head>
+<body>
+    <video id="video" height="480" controls></video><br/>
+    <input type="file" id="filename" value="ファイル読み込み"/><br/>
+    <input type="button" value="   再生   " onClick="play()"/>
+    <input type="button" value="   停止   " onClick="pause()"/><br/>
+	<input type="button" value="+0.05倍" onClick="changeSpeed(0.05)"/>
+    <input type="button" value="-0.05倍" onClick="changeSpeed(-0.05)"/><br/>
+    <input type="button" value="+  0.1倍" onClick="changeSpeed(0.1)"/>
+    <input type="button" value="-  0.1倍" onClick="changeSpeed(-0.1)"/><br/>
+	<input type="button" value="+     1倍" onClick="changeSpeed(1)"/>
+    <input type="button" value="-     1倍" onClick="changeSpeed(-1)"/><br/>
+	全体（秒）:<span id="length"></span><br>
+    現在（秒）:<span id="position">-</span><br/>
+    速度     : <span id="speed">1.0</span><br/>
+
+     </div>
+    <script>
+    // service workerの登録関係
+    if ('serviceWorker' in navigator) {
+    navigator.serviceWorker.register('service_worker.js').then(function(registration) {
+        console.log('ServiceWorker registration successful with scope: ', registration.scope);
+    }).catch(function(err) {
+        console.log('ServiceWorker registration failed: ', err);
+    });
+    }
+    </script>
+  </body>
+  </div>
+</html>
+ <style>
+body{
+ margin:0;            /* ←追加 */
+}
+
+#title{
+ margin:0;            /* ←追加 */
+}
+ </style>
+<html>
+
+    <script>
+	var media = document.getElementById("video");
+	media.loop = true;
+    function init(){
+        var f = document.getElementById("filename");
+        f.addEventListener( "change", function (event) {
+            var URL = URL || webkitURL;
+            var file = event.target.files[0];
+            document.querySelector('video').src = URL.createObjectURL(file);
+            document.getElementById('filename').innerHTML = document.querySelector('video').src;
+        }, false );
+
+        var v = document.getElementById("video");
+        v.addEventListener("timeupdate", function(){
+			var time = Math.floor( v.currentTime * Math.pow( 10, 2 ) ) / Math.pow( 10, 2 ) ;
+            document.getElementById("position").innerHTML = time;
+            document.getElementById("speed").innerHTML = v.playbackRate.toFixed(1);
+			var lng = Math.floor(v.duration);
+			document.getElementById("length").innerHTML = lng;
+        }, false);
+    }
+
+    function play() {
+        var v = document.getElementById("video");
+        if  ( v == null || v.src == null ) return;
+        v.play();
+    }
+
+    function pause() {
+        var v = document.getElementById("video");
+        if  ( v == null || v.src == null ) return;
+        v.pause();
+    }
+
+    function changeSpeed( val ) {
+        var v = document.getElementById("video");
+        if  ( v == null || v.src == null ) return;
+        if ( v.playbackRate + val < 0.049 ) v.playbackRate = 0.05;
+        else v.playbackRate += val;
+    }
+
+    init();
+    </script>
+</body>
+</html>
