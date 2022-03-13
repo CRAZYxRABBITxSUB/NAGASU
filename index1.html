@@ -19,6 +19,7 @@
     <input type="button" value="-  0.1倍" onClick="changeSpeed(-0.1)"/><br/>
 	<input type="button" value="+     1倍" onClick="changeSpeed(1)"/>
     <input type="button" value="-     1倍" onClick="changeSpeed(-1)"/><br/>
+	<input type="button" id="button-pip" value="picture in picture"><br/>
 	全体（秒）:<span id="length"></span><br>
     現在（秒）:<span id="position">-</span><br/>
     速度     : <span id="speed">1.0</span><br/>
@@ -34,6 +35,16 @@
 	var media = document.getElementById("video");
 	media.loop = true;
     function init(){
+	 const pip = document.querySelector('#button-pip');
+            pip.addEventListener('click', function () {
+                video.requestPictureInPicture();
+            });
+			
+            const video = document.querySelector('#video');
+            // <video>要素を自動再生するためにmuteにする
+            video.muted = true;
+            video.play();
+
         var f = document.getElementById("filename");
         f.addEventListener( "change", function (event) {
             var URL = URL || webkitURL;
